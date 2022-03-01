@@ -6,6 +6,8 @@ export default function Checkout(props: { listing: Listing }) {
     return <div>404 not found?</div>;
   }
 
+  console.log(props.listing);
+
   return (
     <div className="h-full w-full flex flex-col p-4 items-center pt-12 max-w-4xl m-auto">
       <div className="flex flex-row w-full items-end pb-4">
@@ -59,11 +61,11 @@ export default function Checkout(props: { listing: Listing }) {
 }
 
 interface StaticParams {
-  cid: string;
+  publicKey: string;
 }
 
 export async function getStaticProps(context: { params: StaticParams }) {
-  const listing = await loadListing(context.params.cid);
+  const listing = await loadListing(context.params.publicKey, "testnet");
 
   return {
     props: {
@@ -73,12 +75,11 @@ export async function getStaticProps(context: { params: StaticParams }) {
 }
 
 export async function getStaticPaths(context: any) {
-  console.log("getStaticPaths", context);
   return {
     paths: [
       {
         params: {
-          cid: "somelistingid",
+          publicKey: "somelistingid",
         },
       },
     ],
