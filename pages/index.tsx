@@ -3,7 +3,23 @@ import { AppleSVG, WindowsSVG } from "../components/icons";
 
 export default function Checkout() {
   return (
-    <div className="h-full w-full flex p-4 items-center max-w-4xl m-auto">
+    <div className="h-full w-full flex flex-col p-4 items-center pt-12 max-w-4xl m-auto">
+      <div className="flex flex-row w-full items-end pb-4 px-4">
+        <div className="w-full flex flex-col">
+          <h1 className="text-2xl font-medium ">DummyTitle</h1>
+          <p className="opacity-80">A small tagline could go here</p>
+        </div>
+        <div className="">hi</div>
+      </div>
+      <div className="flex flex-row w-full pb-4">
+        <div className="flex flex-col pr-4 flex-1 w-full">
+          <div className="bg-gray-800 h-full w-full h-64 p-4"></div>
+        </div>
+        <div className="flex flex-col flex-1 w-full">
+          <div className="bg-gray-800 h-full w-full h-64 p-4"></div>
+        </div>
+      </div>
+
       <div className="relative bg-gray-800 flex flex-row justify-between items-center p-4 w-full rounded-sm">
         <div className="mr-4 flex flex-col">
           <div className="font-bold text-xl">Buy DummyTitle</div>
