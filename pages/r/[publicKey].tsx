@@ -1,12 +1,37 @@
 import { AppleSVG, WindowsSVG } from "../../components/icons";
-import { Listing, loadListing } from "../../lib/load";
+import { useSolPrice } from "../../components/useSolPrice";
+import {
+  Listing,
+  loadAllListingPublicKeys,
+  loadListing,
+  solanaPrice,
+} from "../../lib/load";
+import BN from "bn.js";
 
-export default function Checkout(props: { listing: Listing }) {
+function useLamportsAsUSD(lamports: string, cachedSolPrice: number) {
+  let solPrice = cachedSolPrice;
+  const upToDateSolPrice = useSolPrice();
+  if (upToDateSolPrice) solPrice = upToDateSolPrice;
+
+  return new BN(lamports)
+    .div(new BN(1e9))
+    .mul(new BN(solPrice))
+    .mul(new BN(10000000000))
+    .toString();
+}
+
+export default function Checkout(props: {
+  listing: Listing;
+  solPrice: number;
+}) {
+  const price = useLamportsAsUSD(
+    props.listing?.account?.price || "0",
+    props.solPrice
+  );
+
   if (!props.listing) {
     return <div>404 not found?</div>;
   }
-
-  console.log(props.listing);
 
   return (
     <div className="h-full w-full flex flex-col p-4 items-center pt-12 max-w-4xl m-auto">
@@ -48,7 +73,7 @@ export default function Checkout(props: { listing: Listing }) {
           </div>
           <div className="relative flex rounded justify-center flex-row items-center top-10 bg-black pl-4 pr-1 py-1">
             <div className="mr-4 text-sm font-mono opacity-80">
-              <div>$59.99</div>
+              <div>${price}</div>
             </div>
             <button className="flex px-4 py-2 transition-all bg-green-700 hover:bg-green-500 rounded-sm font-medium">
               Checkout
@@ -65,24 +90,30 @@ interface StaticParams {
 }
 
 export async function getStaticProps(context: { params: StaticParams }) {
-  const listing = await loadListing(context.params.publicKey, "testnet");
+  const listing = await loadListing(
+    context.params.publicKey,
+    (process.env.SOLANA_CLUSTER as any) || "testnet"
+  );
+  const solPrice = await solanaPrice();
 
   return {
     props: {
       listing,
+      solPrice,
     }, // will be passed to the page component as props
   };
 }
 
 export async function getStaticPaths(context: any) {
+  const publicKeys = await loadAllListingPublicKeys(
+    (process.env.SOLANA_CLUSTER as any) || "testnet"
+  );
+  console.log(`Creating ${publicKeys.length} paths`);
+
   return {
-    paths: [
-      {
-        params: {
-          publicKey: "somelistingid",
-        },
-      },
-    ],
+    paths: publicKeys.map((publicKey: any) => ({
+      params: { publicKey: publicKey.toString() },
+    })),
     fallback: true, // false or 'blocking'
   };
 }

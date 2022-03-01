@@ -1,13 +1,28 @@
 import { request, gql } from "graphql-request";
 import * as solana from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
+import * as splToken from "@solana/spl-token";
 import { fetchStrangemoodProgram, Strangemood } from "@strangemood/strangemood";
 import { Program } from "@project-serum/anchor";
 
 export interface Listing {
   publicKey: string;
-  account: {}; // The Solana account data
+  account: {
+    isInitialized: boolean;
+    isAvailable: boolean;
+    isSuspended: boolean;
+    isRefundable: boolean;
+    isConsumable: boolean;
+    uri: string;
+    charter: string;
+    authority: string;
+    paymentDeposit: string;
+    voteDeposit: string;
+    price: string;
+    mint: string;
+  }; // The Solana account data
   cid: string; // The CID of the IPFS content
+  currency: string; // The string of the mint
   metadata: {
     name: string;
     description: string;
@@ -15,6 +30,15 @@ export interface Listing {
     images: string[];
     primaryImage: string;
   }; // The IPFS metadata
+}
+
+export async function solanaPrice() {
+  const resp = await fetch(
+    "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
+  );
+
+  const { solana } = await resp.json();
+  return solana.usd;
 }
 
 export async function getProvider(net: solana.Cluster) {
@@ -43,6 +67,15 @@ export async function getProgram(options?: {
   return program as any;
 }
 
+export async function loadAllListingPublicKeys(net: solana.Cluster) {
+  const program = await getProgram({
+    net,
+  });
+
+  const listings = await program.account.listing.all();
+  return listings.map((l) => l.publicKey);
+}
+
 // Loads data from IPFS
 export async function loadListing(
   publicKey: string,
@@ -56,6 +89,11 @@ export async function loadListing(
     new solana.PublicKey(publicKey)
   );
   const uri = account.uri;
+
+  const deposit = await splToken.getAccount(
+    program.provider.connection,
+    account.paymentDeposit
+  );
 
   const query = gql`
     query ($key: String) {
@@ -88,6 +126,7 @@ export async function loadListing(
 
   const listing: Listing = {
     publicKey: publicKey,
+    currency: deposit.mint.toString(),
     account: {
       isInitialized: account.isInitialized,
       isAvailable: account.isAvailable,
