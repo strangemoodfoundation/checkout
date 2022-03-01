@@ -1,12 +1,13 @@
-import { AppleSVG, WindowsSVG } from "../../components/icons";
-import { useSolPrice } from "../../components/useSolPrice";
+import { AppleSVG, WindowsSVG } from "../../../components/icons";
+import { useSolPrice } from "../../../components/useSolPrice";
 import {
   Listing,
   loadAllListingPublicKeys,
   loadListing,
   solanaPrice,
-} from "../../lib/load";
+} from "../../../lib/load";
 import BN from "bn.js";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 
 function useLamportsAsUSD(lamports: string, cachedSolPrice: number) {
   let solPrice = cachedSolPrice;
@@ -18,6 +19,14 @@ function useLamportsAsUSD(lamports: string, cachedSolPrice: number) {
     .mul(new BN(solPrice))
     .mul(new BN(10000000000))
     .toString();
+}
+
+function PaymentPrompt(props: { listing: Listing; solPrice: number }) {
+  return (
+    <WalletModalProvider>
+      <div>hi</div>
+    </WalletModalProvider>
+  );
 }
 
 export default function Checkout(props: {
