@@ -50,7 +50,7 @@ export default function Checkout(props: {
             {props.listing.metadata.name}
           </h1>
         </div>
-        <div className="">share</div>
+        {/* <div className="">share</div> */}
       </div>
       <div className="flex flex-row w-full pb-4 justify-start start">
         <div className="flex flex-col dark:bg-gray-800 bg-gray-100 flex-1 w-full">
@@ -71,9 +71,9 @@ export default function Checkout(props: {
           </div>
           <a
             className="opacity-50 underline text-xs"
-            href={`https://explorer.strangemood.com/address/somelistingid`}
+            href={`https://explorer.strangemood.com/address/${props.listing.publicKey}`}
           >
-            {`sol://${"foo"}`}
+            {`sol://${props.listing.publicKey}`}
           </a>
         </div>
         <div>
