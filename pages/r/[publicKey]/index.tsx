@@ -16,6 +16,7 @@ import { useState } from "react";
 import { grabStrangemood } from "../../../components/useStrangemood";
 import { purchase } from "@strangemood/strangemood";
 import { PublicKey, Transaction } from "@solana/web3.js";
+import cn from "classnames";
 
 function useLamportsAsUSD(lamports: string, cachedSolPrice: number) {
   let solPrice = cachedSolPrice;
@@ -116,16 +117,17 @@ export default function Checkout(props: {
             <div className="mr-4 text-sm font-mono opacity-80">
               <div>${price}</div>
             </div>
-            {isLoading ? (
-              <div>loading</div>
-            ) : (
-              <button
-                onClick={() => onCheckoutClicked()}
-                className="flex  px-4 py-2 transition-all  text-green-800 dark:text-gray-900 bg-green-400 dark:bg-green-500 dark:hover:bg-green-400 dark:rounded-sm rounded-r-sm font-medium"
-              >
-                Checkout
-              </button>
-            )}
+
+            <button
+              onClick={() => onCheckoutClicked()}
+              className={cn({
+                "flex  px-4 py-2 transition-all  text-green-800 dark:text-gray-900 bg-green-400 dark:bg-green-500 dark:hover:bg-green-400 dark:rounded-sm rounded-r-sm font-medium":
+                  true,
+                "opacity-50 cursor-not-allowed animate-pulse": isLoading,
+              })}
+            >
+              Checkout
+            </button>
           </div>
         </div>
       </div>
