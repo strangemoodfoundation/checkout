@@ -65,8 +65,6 @@ export default function Checkout(props: {
       quantity: new BN(1),
     });
 
-    console.log(wallet.publicKey?.toString());
-
     instructions.pop();
     console.log(instructions.map((i) => i.programId.toString()));
     const tx = new Transaction();
