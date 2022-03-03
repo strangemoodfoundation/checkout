@@ -16,7 +16,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.5",
     "@solana/wallet-adapter-wallets": "^0.15.4",
     "@solana/web3.js": "^1.35.1",
-    "@strangemood/strangemood": "^0.0.0-77",
+    "@strangemood/strangemood": "^0.0.0-87",
     "autoprefixer": "^10.4.2",
     "bn.js": "^5.2.0",
     "graphql": "^16.3.0",

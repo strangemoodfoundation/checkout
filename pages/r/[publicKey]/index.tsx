@@ -7,7 +7,15 @@ import {
   solanaPrice,
 } from "../../../lib/load";
 import BN from "bn.js";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import {
+  WalletModalProvider,
+  useWalletModal,
+} from "@solana/wallet-adapter-react-ui";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useState } from "react";
+import { grabStrangemood } from "../../../components/useStrangemood";
+import { purchase } from "@strangemood/strangemood";
+import { PublicKey, Transaction } from "@solana/web3.js";
 
 function useLamportsAsUSD(lamports: string, cachedSolPrice: number) {
   let solPrice = cachedSolPrice;
@@ -21,14 +29,6 @@ function useLamportsAsUSD(lamports: string, cachedSolPrice: number) {
     .toString();
 }
 
-function PaymentPrompt(props: { listing: Listing; solPrice: number }) {
-  return (
-    <WalletModalProvider>
-      <div>hi</div>
-    </WalletModalProvider>
-  );
-}
-
 export default function Checkout(props: {
   listing: Listing;
   solPrice: number;
@@ -37,9 +37,44 @@ export default function Checkout(props: {
     props.listing?.account?.price || "0",
     props.solPrice
   );
+  const { visible, setVisible } = useWalletModal();
+  const wallet = useWallet();
+  const { connection } = useConnection();
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!props.listing) {
     return <div>404 not found?</div>;
+  }
+
+  async function onCheckoutClicked() {
+    if (wallet.connected) {
+      onPurchase();
+    } else {
+      setVisible(true);
+    }
+  }
+
+  async function onPurchase() {
+    setIsLoading(true);
+    const program = await grabStrangemood(connection, wallet);
+
+    const { instructions } = await purchase({
+      program: program as any,
+      signer: program.provider.wallet.publicKey as any,
+      listing: new PublicKey(props.listing.publicKey),
+      quantity: new BN(1),
+    });
+
+    console.log(wallet.publicKey?.toString());
+
+    instructions.pop();
+    console.log(instructions.map((i) => i.programId.toString()));
+    const tx = new Transaction();
+    tx.add(...instructions);
+    await program.provider.send(tx);
+    setIsLoading(false);
+
+    alert("Purchased!");
   }
 
   return (
@@ -50,7 +85,6 @@ export default function Checkout(props: {
             {props.listing.metadata.name}
           </h1>
         </div>
-        {/* <div className="">share</div> */}
       </div>
       <div className="flex flex-row w-full pb-4 justify-start start">
         <div className="flex flex-col dark:bg-gray-800 bg-gray-100 flex-1 w-full">
@@ -84,9 +118,16 @@ export default function Checkout(props: {
             <div className="mr-4 text-sm font-mono opacity-80">
               <div>${price}</div>
             </div>
-            <button className="flex  px-4 py-2 transition-all  text-green-800 dark:text-gray-900 bg-green-400 dark:bg-green-500 dark:hover:bg-green-400 dark:rounded-sm rounded-r-sm font-medium">
-              Checkout
-            </button>
+            {isLoading ? (
+              <div>loading</div>
+            ) : (
+              <button
+                onClick={() => onCheckoutClicked()}
+                className="flex  px-4 py-2 transition-all  text-green-800 dark:text-gray-900 bg-green-400 dark:bg-green-500 dark:hover:bg-green-400 dark:rounded-sm rounded-r-sm font-medium"
+              >
+                Checkout
+              </button>
+            )}
           </div>
         </div>
       </div>

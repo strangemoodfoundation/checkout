@@ -586,10 +586,10 @@
     eventemitter3 "^4.0.7"
     uuid "^8.3.2"
 
-"@strangemood/strangemood@^0.0.0-77":
-  version "0.0.0-77"
-  resolved "https://registry.yarnpkg.com/@strangemood/strangemood/-/strangemood-0.0.0-77.tgz#56863925cd66c368f207d9a25f89bd07bb9f94f3"
-  integrity sha512-tkLRwIoXZK74fWX86bx3d5tRpSkv4tFWRoOYmkSVraeIOzvYAJ8VzL/hPobjleh/n/nz1/R8F6LpC2vSp7Xt6Q==
+"@strangemood/strangemood@^0.0.0-87":
+  version "0.0.0-87"
+  resolved "https://registry.yarnpkg.com/@strangemood/strangemood/-/strangemood-0.0.0-87.tgz#c92ec201475634a217d11f2aac5b9c9e49129743"
+  integrity sha512-Z0oyHKaLB9ZaMmmdNIF7RouflqHZkvMDABXkfUZShvGqSAvNjZH21vVlUmJhQvrpTTj68kBj9h1NTGOFoboHAQ==
   dependencies:
     "@project-serum/anchor" "0.22.0"
     "@solana/buffer-layout" "^4.0.0"
