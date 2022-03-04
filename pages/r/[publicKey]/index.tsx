@@ -17,6 +17,7 @@ import { grabStrangemood } from "../../../components/useStrangemood";
 import { purchase } from "@strangemood/strangemood";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import cn from "classnames";
+import { getListingMetadata } from "../../../lib/graphql";
 
 function useLamportsAsUSD(lamports: string, cachedSolPrice: number) {
   let solPrice = cachedSolPrice;
@@ -76,31 +77,37 @@ export default function Checkout(props: {
     alert("Purchased!");
   }
 
+  if (!props.listing.metadata) {
+    return (
+      <div>This Listing does not have valid metadata, and may be broken.</div>
+    );
+  }
+
   return (
     <div className="h-full w-full flex flex-col justify-between p-4 items-center pt-12 max-w-4xl m-auto">
       <div>
         <div className="flex flex-row w-full items-end pb-4">
           <div className="w-full flex flex-col">
             <h1 className="text-2xl font-medium ">
-              {props.listing.metadata.name}
+              {props.listing.metadata!.name}
             </h1>
           </div>
         </div>
         <div className="flex flex-row w-full pb-4 justify-start start">
           <div className="flex flex-col dark:bg-gray-800 bg-gray-100 flex-1 w-full">
             <img
-              src={props.listing.metadata.primaryImage}
+              src={props.listing.metadata!.primaryImage}
               className=" w-full object-contain"
             />
             <p className="text-sm px-4 py-2 opacity-80">
-              {props.listing.metadata.description}
+              {props.listing.metadata!.description}
             </p>
           </div>
         </div>
         <div className="relative dark:bg-gray-800 bg-gray-100 flex flex-row justify-between items-center p-4 w-full rounded-sm">
           <div className="mr-4 flex flex-col">
             <div className="font-bold text-xl">
-              Buy {props.listing.metadata.name}
+              Buy {props.listing.metadata!.name}
             </div>
             <a
               className="opacity-50 underline text-xs"
