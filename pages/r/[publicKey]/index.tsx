@@ -184,9 +184,10 @@ export async function getStaticPaths(context: any) {
   console.log(`Creating ${publicKeys.length} paths`);
 
   return {
-    paths: publicKeys.map((publicKey: any) => ({
-      params: { publicKey: publicKey.toString() },
-    })),
+    // paths: publicKeys.map((publicKey: any) => ({
+    //   params: { publicKey: publicKey.toString() },
+    // })),
+    paths: [],
     fallback: true, // false or 'blocking'
   };
 }
