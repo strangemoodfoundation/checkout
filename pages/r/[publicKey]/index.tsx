@@ -137,11 +137,13 @@ export default function Checkout(props: {
         <a
           href="https://github.com/strangemoodfoundation/checkout"
           target={"_blank"}
+          rel="noreferrer"
           className="hover:opacity-50 animate-all underline text-sm"
         >{`Edit this website`}</a>
         <a
           href="https://strangemood.org"
           target={"_blank"}
+          rel="noreferrer"
           className="hover:opacity-50 animate-all font-mono text-sm"
         >{`☼ strangemood ☼`}</a>
       </div>
