@@ -4,6 +4,7 @@ import * as anchor from "@project-serum/anchor";
 import * as splToken from "@solana/spl-token";
 import { fetchStrangemoodProgram, Strangemood } from "@strangemood/strangemood";
 import { Program } from "@project-serum/anchor";
+import { ListingMetadata } from "./graphql";
 
 export interface Listing {
   publicKey: string;
@@ -23,13 +24,7 @@ export interface Listing {
   }; // The Solana account data
   cid: string; // The CID of the IPFS content
   currency: string; // The string of the mint
-  metadata: {
-    name: string;
-    description: string;
-    tagline: string;
-    images: string[];
-    primaryImage: string;
-  }; // The IPFS metadata
+  metadata: ListingMetadata; // The IPFS metadata
 }
 
 export async function solanaPrice() {
@@ -117,7 +112,7 @@ export async function loadListing(
   `;
 
   const data = await request(
-    `https://openmetagraph.com/api/graphql?schema=QmUmLdYHHAqDYNnRGeKbHg4pxocFV1VAZuuHuRvdNiY1Bb&schema=QmRnQhScsXQvMtWNLNQJ3Hbxn2NCVBvaU4PPp37CYX54pr&schema=Qmd3ChXtpCAQqRkAySdJz1HerUoCnVJQT1aBTgizYLximQ`,
+    `https://www.openmetagraph.com/api/graphql?schema=QmUmLdYHHAqDYNnRGeKbHg4pxocFV1VAZuuHuRvdNiY1Bb&schema=QmRnQhScsXQvMtWNLNQJ3Hbxn2NCVBvaU4PPp37CYX54pr&schema=Qmd3ChXtpCAQqRkAySdJz1HerUoCnVJQT1aBTgizYLximQ`,
     query,
     {
       key: uri,
