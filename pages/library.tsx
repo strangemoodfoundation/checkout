@@ -3,12 +3,14 @@ import {
   WalletModalProvider,
   useWalletModal,
 } from "@solana/wallet-adapter-react-ui";
-import { ReactNode, useEffect, useState } from "react";
+import { LiHTMLAttributes, ReactNode, useEffect, useState } from "react";
 import { grabStrangemood } from "../components/useStrangemood";
 import { pda, Listing } from "@strangemood/strangemood";
 import * as splToken from "@solana/spl-token";
 import * as anchor from "@project-serum/anchor";
 import { getListingMetadata, ListingMetadata } from "../lib/graphql";
+import { useRouter } from "next/router";
+import useSwr from "swr";
 
 function Layout(props: { children: ReactNode }) {
   return (
@@ -178,11 +180,107 @@ function Skeleton() {
   );
 }
 
+// TODO: Make precrypt return json
+// @ts-ignore
+const textFetcher = (...args: any) => fetch(...args).then((res) => res.text());
+
+function DownloadStatus({ uuid }: { uuid: string }) {
+  const resp = useSwr<string>(
+    `https://api.precrypt.org/file/status/${uuid}`,
+    textFetcher,
+    { refreshInterval: 200 }
+  );
+
+  if (!resp.data || resp.data != "Ready") {
+    return (
+      <div className="flex items-center justify-center">
+        <div className="animate-spin">Loading</div>
+      </div>
+    );
+  }
+  return (
+    <a
+      target={"_blank"}
+      href={`https://api.precrypt.org/file/${"uuid"}`}
+      className="text-blue-500 underline"
+    >
+      Download Now!
+    </a>
+  );
+}
+
+function DownloadButton({ metadata }: { metadata: ListingMetadata }) {
+  const { signMessage, publicKey } = useWallet();
+  const [statusID, setStatusID] = useState<string>();
+
+  async function onDownload(item: ListingMetadata) {
+    const platform = item.platforms[0];
+    if (!platform) return;
+    if (!signMessage || !publicKey) return;
+
+    const precrypt = platform.precrypts[0];
+    if (!precrypt) return;
+
+    const message = new TextEncoder().encode("precrypt");
+    const signature = await signMessage(message as any);
+
+    const resp = await fetch(`https://api.precrypt.org/file/request`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        key_cid: precrypt.key.uri,
+        sol_pubkey: Array.from(publicKey.toBytes()),
+        sol_signed_message: Array.from(signature),
+      }),
+    });
+    const { uuid } = await resp.json();
+    setStatusID(uuid);
+  }
+
+  if (statusID) {
+    return <DownloadStatus uuid={statusID} />;
+  }
+
+  return (
+    <button
+      onClick={() => onDownload(metadata)}
+      className="border dark:border-gray-600 text-sm px-4 py-1 hover:opacity-50 transition-all flex"
+    >
+      Prepare Download
+    </button>
+  );
+}
+
 function LibraryPage() {
   const { library, loading } = useLibrary();
+  const { signMessage, publicKey } = useWallet();
+  const router = useRouter();
 
-  function onDownload() {
-    console.log("hi", library);
+  async function onDownload(item: ListingMetadata) {
+    const platform = item.platforms[0];
+    if (!platform) return;
+    if (!signMessage || !publicKey) return;
+
+    const precrypt = platform.precrypts[0];
+    if (!precrypt) return;
+
+    const message = new TextEncoder().encode("precrypt");
+    const signature = await signMessage(message as any);
+
+    const resp = await fetch(`https://api.precrypt.org/file/request`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        key_cid: precrypt.key.uri,
+        sol_pubkey: Array.from(publicKey.toBytes()),
+        sol_signed_message: Array.from(signature),
+      }),
+    });
+    const { uuid } = await resp.json();
   }
 
   return (
@@ -214,12 +312,7 @@ function LibraryPage() {
                   {item.metadata?.description || "no description"}
                 </p>
                 <div>
-                  <button
-                    onClick={onDownload}
-                    className="border dark:border-gray-600 text-sm px-4 py-1 hover:opacity-50 transition-all flex"
-                  >
-                    Download
-                  </button>
+                  {item.metadata && <DownloadButton metadata={item.metadata} />}
                 </div>
               </div>
             </div>
