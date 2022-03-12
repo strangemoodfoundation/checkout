@@ -17,7 +17,6 @@ import { grabStrangemood } from "../../../components/useStrangemood";
 import { purchase } from "@strangemood/strangemood";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import cn from "classnames";
-import { getListingMetadata } from "../../../lib/graphql";
 
 function useLamportsAsUSD(lamports: string, cachedSolPrice: number) {
   let solPrice = cachedSolPrice;
@@ -45,7 +44,11 @@ export default function Checkout(props: {
   const [isLoading, setIsLoading] = useState(false);
 
   if (!props.listing) {
-    return <div>404 not found?</div>;
+    return (
+      <div className="animate-pulse w-full h-full flex items-center justify-center">
+        <div className="animate-spin">Loading...</div>
+      </div>
+    );
   }
 
   async function onCheckoutClicked() {
@@ -84,8 +87,8 @@ export default function Checkout(props: {
   }
 
   return (
-    <div className="h-full w-full flex flex-col justify-between p-4 items-center pt-12 max-w-4xl m-auto">
-      <div>
+    <div className="h-full w-full flex flex-col  justify-betweenitems-center pt-12 ">
+      <div className="flex flex-col flex-1 h-full mb-24  p-4 max-w-4xl m-auto ">
         <div className="flex flex-row w-full items-end pb-4">
           <div className="w-full flex flex-col">
             <h1 className="text-2xl font-medium ">
@@ -96,7 +99,7 @@ export default function Checkout(props: {
         <div className="flex flex-row w-full pb-4 justify-start start">
           <div className="flex flex-col dark:bg-gray-800 bg-gray-100 flex-1 w-full">
             <img
-              src={props.listing.metadata!.primaryImage}
+              src={props.listing.metadata!.primaryImage.src.uri}
               className=" w-full object-contain"
             />
             <p className="text-sm px-4 py-2 opacity-80">
@@ -140,19 +143,21 @@ export default function Checkout(props: {
         </div>
       </div>
 
-      <div className="rounded-sm bg-black w-full p-4 opacity-50 justify-between flex">
-        <a
-          href="https://github.com/strangemoodfoundation/checkout"
-          target={"_blank"}
-          rel="noreferrer"
-          className="hover:opacity-50 animate-all underline text-sm"
-        >{`Edit this website`}</a>
-        <a
-          href="https://strangemood.org"
-          target={"_blank"}
-          rel="noreferrer"
-          className="hover:opacity-50 animate-all font-mono text-sm"
-        >{`☼ strangemood ☼`}</a>
+      <div className="border-t dark:bg-black w-full p-4 opacity-50 ">
+        <div className="max-w-4xl m-auto w-full flex justify-between">
+          <a
+            href="https://github.com/strangemoodfoundation/checkout"
+            target={"_blank"}
+            rel="noreferrer"
+            className="hover:opacity-50 animate-all underline text-sm"
+          >{`Edit this website`}</a>
+          <a
+            href="https://strangemood.org"
+            target={"_blank"}
+            rel="noreferrer"
+            className="hover:opacity-50 animate-all font-mono text-sm"
+          >{`☼ strangemood ☼`}</a>
+        </div>
       </div>
     </div>
   );
@@ -178,10 +183,9 @@ export async function getStaticProps(context: { params: StaticParams }) {
 }
 
 export async function getStaticPaths(context: any) {
-  const publicKeys = await loadAllListingPublicKeys(
-    (process.env.SOLANA_CLUSTER as any) || "testnet"
-  );
-  console.log(`Creating ${publicKeys.length} paths`);
+  // const publicKeys = await loadAllListingPublicKeys(
+  //   (process.env.SOLANA_CLUSTER as any) || "testnet"
+  // );
 
   return {
     // paths: publicKeys.map((publicKey: any) => ({

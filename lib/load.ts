@@ -4,7 +4,7 @@ import * as anchor from "@project-serum/anchor";
 import * as splToken from "@solana/spl-token";
 import { fetchStrangemoodProgram, Strangemood } from "@strangemood/strangemood";
 import { Program } from "@project-serum/anchor";
-import { ListingMetadata } from "./graphql";
+import { getListingMetadata, ListingMetadata } from "./graphql";
 
 export interface Listing {
   publicKey: string;
@@ -90,40 +90,7 @@ export async function loadListing(
     account.paymentDeposit
   );
 
-  const query = gql`
-    query ($key: String) {
-      get(key: $key) {
-        name
-        description
-        primaryImage {
-          uri
-        }
-        images {
-          uri
-        }
-        creators {
-          websiteURL
-          twitterURL
-          name
-          description
-        }
-      }
-    }
-  `;
-
-  let data;
-
-  try {
-    data = await request(
-      `https://www.openmetagraph.com/api/graphql?schema=QmUmLdYHHAqDYNnRGeKbHg4pxocFV1VAZuuHuRvdNiY1Bb&schema=QmRnQhScsXQvMtWNLNQJ3Hbxn2NCVBvaU4PPp37CYX54pr&schema=Qmd3ChXtpCAQqRkAySdJz1HerUoCnVJQT1aBTgizYLximQ`,
-      query,
-      {
-        key: uri,
-      }
-    );
-  } catch (err) {
-    console.error(err);
-  }
+  const data = await getListingMetadata(uri);
 
   const listing: Listing = {
     publicKey: publicKey,
@@ -143,15 +110,7 @@ export async function loadListing(
       mint: account.mint.toString(),
     },
     cid: uri,
-    metadata: data
-      ? {
-          name: data.get.name,
-          description: data.get.description,
-          tagline: "todo",
-          images: data.get.images.map((image: any) => image.uri),
-          primaryImage: data.get.primaryImage.uri,
-        }
-      : undefined,
+    metadata: data ? data : undefined,
   };
 
   return listing;

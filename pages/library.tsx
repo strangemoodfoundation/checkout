@@ -117,14 +117,22 @@ async function fetchLibrary(connection: any, wallet: any) {
         if (!listingAccount) return undefined;
         const listing = await program.account.listing.fetch(listingPublicKey);
 
-        const metadata = await getListingMetadata(listing.uri);
+        try {
+          const metadata = await getListingMetadata(listing.uri);
 
-        return {
-          account: listing as Listing,
-          metadata: metadata,
-          publicKey: listingPublicKey,
-          amount: account.amount,
-        };
+          return {
+            account: listing as Listing,
+            metadata: metadata,
+            publicKey: listingPublicKey,
+            amount: account.amount,
+          };
+        } catch (err) {
+          return {
+            account: listing as Listing,
+            publicKey: listingPublicKey,
+            amount: account.amount,
+          };
+        }
       })
     )
   ).filter((n) => n); // remove undefined
@@ -173,6 +181,10 @@ function Skeleton() {
 function LibraryPage() {
   const { library, loading } = useLibrary();
 
+  function onDownload() {
+    console.log("hi", library);
+  }
+
   return (
     <Layout>
       <div className="w-full dark:bg-gray-800 border-b dark:border-gray-700 px-4 py-4 ">
@@ -186,19 +198,29 @@ function LibraryPage() {
       ) : (
         library.map((item) => (
           <div
-            className="px-4 py-2 w-full border-b hover:dark:border-gray-600 dark:border-gray-700  "
+            className="px-4 py-2 w-full border-b dark:border-gray-700  "
             key={item.publicKey.toBase58()}
           >
             <div className="flex max-w-4xl m-auto">
               <img
-                src={item.metadata.primaryImage}
+                src={item.metadata?.primaryImage.src.uri}
                 className="w-72 object-fill mr-4"
               />
               <div className="max-w-4xl mx-auto w-full flex flex-col">
-                <div className="font-bold mb-1">{item.metadata.name}</div>
-                <p className="dark:text-gray-400 text-gray-700 text-sm">
-                  {item.metadata.description}
+                <div className="font-bold mb-1">
+                  {item.metadata?.name || "unamed"}
+                </div>
+                <p className="dark:text-gray-400 text-gray-700 text-sm mb-2">
+                  {item.metadata?.description || "no description"}
                 </p>
+                <div>
+                  <button
+                    onClick={onDownload}
+                    className="border dark:border-gray-600 text-sm px-4 py-1 hover:opacity-50 transition-all flex"
+                  >
+                    Download
+                  </button>
+                </div>
               </div>
             </div>
           </div>
