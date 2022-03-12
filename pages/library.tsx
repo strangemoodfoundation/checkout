@@ -201,7 +201,7 @@ function DownloadStatus({ uuid }: { uuid: string }) {
   return (
     <a
       target={"_blank"}
-      href={`https://api.precrypt.org/file/${"uuid"}`}
+      href={`https://api.precrypt.org/file/${uuid}`}
       className="text-blue-500 underline"
     >
       Download Now!
@@ -230,7 +230,7 @@ function DownloadButton({ metadata }: { metadata: ListingMetadata }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        key_cid: precrypt.key.uri,
+        key_cid: precrypt.key.uri.replace("ipfs://", ""),
         sol_pubkey: Array.from(publicKey.toBytes()),
         sol_signed_message: Array.from(signature),
       }),

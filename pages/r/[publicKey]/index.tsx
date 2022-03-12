@@ -70,8 +70,9 @@ export default function Checkout(props: {
       quantity: new BN(1),
     });
 
-    instructions.pop();
+    // instructions.pop(); // why did we pop this instruction?
     console.log(instructions.map((i) => i.programId.toString()));
+    console.log(instructions);
     const tx = new Transaction();
     tx.add(...instructions);
     await program.provider.send(tx);
