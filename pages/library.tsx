@@ -201,6 +201,7 @@ function DownloadStatus({ uuid }: { uuid: string }) {
   return (
     <a
       target={"_blank"}
+      rel="noreferrer"
       href={`https://api.precrypt.org/file/${uuid}`}
       className="text-blue-500 underline"
     >
