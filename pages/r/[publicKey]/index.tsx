@@ -17,6 +17,7 @@ import { grabStrangemood } from "../../../components/useStrangemood";
 import { purchase } from "@strangemood/strangemood";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import cn from "classnames";
+import { useRouter } from "next/router";
 
 function useLamportsAsUSD(lamports: string, cachedSolPrice: number) {
   let solPrice = cachedSolPrice;
@@ -42,6 +43,7 @@ export default function Checkout(props: {
   const wallet = useWallet();
   const { connection } = useConnection();
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   if (!props.listing) {
     return (
@@ -78,7 +80,7 @@ export default function Checkout(props: {
     await program.provider.send(tx);
     setIsLoading(false);
 
-    alert("Purchased!");
+    router.push("/library");
   }
 
   if (!props.listing.metadata) {
