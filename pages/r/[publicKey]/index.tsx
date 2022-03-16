@@ -92,14 +92,14 @@ export default function Checkout(props: {
   return (
     <div className="h-full w-full flex flex-col justify-between items-center pt-12">
       <div className="flex flex-col w-full p-4 max-w-4xl">
-        <div className="flex flex-row m-auto mb-4 flex-wrap sm:flex-nowrap">
-          <div className="flex flex-row w-full dark:bg-black bg-gray-100">
+        <div className="flex flex-row w-full m-auto mb-4 flex-wrap sm:flex-nowrap">
+          <div className="flex flex-row dark:bg-black bg-gray-100 w-full sm:w-auto">
             <img
               src={props.listing.metadata!.primaryImage?.src.uri}
-              className="w-full m-auto object-contain aspect-video"
+              className="w-full m-auto max-h-96 object-contain"
             />
           </div>
-          <div className="flex flex-col dark:bg-gray-800 bg-gray-100 p-4 min-w-full sm:min-w-min max-w-xs">
+          <div className="flex flex-col dark:bg-gray-800 bg-gray-100 p-4 grow">
             <h1 className="text-3xl font-medium">
               {props.listing.metadata!.name}
             </h1>
