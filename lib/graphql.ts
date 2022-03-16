@@ -84,18 +84,12 @@ export async function getListingMetadata(
         }
         tags
         creators {
-          bio
           name
           links {
             url
-            type
           }
         }
         createdAt
-        updatedAt
-        links {
-          type
-        }
         images {
           height
           width
@@ -105,16 +99,7 @@ export async function getListingMetadata(
             contentType
           }
         }
-        videos {
-          width
-          height
-          src {
-            uri
-            contentType
-          }
-        }
         platforms {
-          type
           precrypts {
             key {
               uri

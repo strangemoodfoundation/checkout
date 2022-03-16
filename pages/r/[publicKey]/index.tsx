@@ -90,33 +90,31 @@ export default function Checkout(props: {
   }
 
   return (
-    <div className="h-full w-full flex flex-col  justify-betweenitems-center pt-12 ">
-      <div className="flex flex-col flex-1 h-full mb-24  p-4 max-w-4xl m-auto ">
-        <div className="flex flex-row w-full items-end pb-4">
-          <div className="w-full flex flex-col">
-            <h1 className="text-2xl font-medium ">
+    <div className="h-full w-full flex flex-col justify-between items-center pt-12">
+      <div className="flex flex-col w-full p-4 max-w-4xl">
+        <div className="flex flex-row m-auto mb-4 flex-wrap sm:flex-nowrap">
+          <div className="flex flex-row w-full dark:bg-black bg-gray-100">
+            <img
+              src={props.listing.metadata!.primaryImage?.src.uri}
+              className="w-full m-auto object-contain aspect-video"
+            />
+          </div>
+          <div className="flex flex-col dark:bg-gray-800 bg-gray-100 p-4 min-w-full sm:min-w-min max-w-xs">
+            <h1 className="text-3xl font-medium">
               {props.listing.metadata!.name}
             </h1>
-          </div>
-        </div>
-        <div className="flex flex-row w-full pb-4 justify-start start">
-          <div className="flex flex-col dark:bg-gray-800 bg-gray-100 flex-1 w-full">
-            <img
-              src={props.listing.metadata!.primaryImage.src.uri}
-              className=" w-full object-contain"
-            />
-            <p className="text-sm px-4 py-2 opacity-80">
+            <p className="text-sm py-2 opacity-80">
               {props.listing.metadata!.description}
             </p>
           </div>
         </div>
-        <div className="relative dark:bg-gray-800 bg-gray-100 flex flex-row justify-between items-center p-4 w-full rounded-sm">
+        <div className="relative dark:bg-gray-800 bg-gray-100 flex flex-row justify-between items-center p-4 rounded-sm">
           <div className="mr-4 flex flex-col">
-            <div className="font-bold text-xl">
+            <div className="font-bold text-lg opacity-80">
               Buy {props.listing.metadata!.name}
             </div>
             <a
-              className="opacity-50 underline text-xs"
+              className="opacity-50 underline text-xs break-all"
               href={`https://explorer.strangemood.com/address/${props.listing.publicKey}`}
             >
               {`sol://${props.listing.publicKey}`}
@@ -126,15 +124,15 @@ export default function Checkout(props: {
             <div className="flex justify-end pr-4">
               <AppleSVG className="h-5 opacity-80 top-2 relative" />
             </div>
-            <div className="relative flex rounded justify-center flex-row items-center top-10 dark:bg-black  bg-white pl-4 dark:pr-1 dark:py-1 border dark:border-0 border-black">
+            <div className="relative flex rounded justify-center flex-row items-center top-10 dark:bg-black bg-white pl-4 dark:pr-1 dark:py-1 border dark:border-0 border-black">
               <div className="mr-4 text-sm font-mono opacity-80">
                 <div>${price}</div>
               </div>
 
               <button
-                onClick={() => onCheckoutClicked()}
+                onClick={onCheckoutClicked}
                 className={cn({
-                  "flex  px-4 py-2 transition-all  text-green-800 dark:text-gray-900 bg-green-400 dark:bg-green-500 dark:hover:bg-green-400 dark:rounded-sm rounded-r-sm font-medium":
+                  "flex px-4 py-2 transition-all text-green-800 dark:text-gray-900 bg-green-400 dark:bg-green-500 dark:hover:bg-green-400 dark:rounded-sm rounded-r-sm font-medium":
                     true,
                   "opacity-50 cursor-not-allowed animate-pulse": isLoading,
                 })}
@@ -146,7 +144,7 @@ export default function Checkout(props: {
         </div>
       </div>
 
-      <div className="border-t dark:bg-black w-full p-4 opacity-50 ">
+      <div className="border-t dark:bg-black w-full p-4 opacity-50">
         <div className="max-w-4xl m-auto w-full flex justify-between">
           <a
             href="https://github.com/strangemoodfoundation/checkout"
