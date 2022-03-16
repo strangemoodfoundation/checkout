@@ -34,7 +34,8 @@ export interface PrecryptNodeMetadata {
   file: FileMetadata;
   key: FileMetadata;
   proxy: string;
-  rule: string[];
+  rule: string;
+  arguments: string[];
 }
 
 export interface PlatformNodeMetadata {
@@ -63,7 +64,7 @@ export interface ListingMetadata {
 }
 
 const LISTING_METADATA_SCHEMA =
-  "bafkreigkik6doxa5keakoqkughknmmmpwy73fssn6yhmxebir2frubgq7q";
+  "bafkreiczgupdf5ha7jt5oqn77koptvclt7edfzriu34ozgeqnasmhyio6a";
 
 export async function getListingMetadata(
   uri: string
@@ -125,6 +126,7 @@ export async function getListingMetadata(
               contentType
             }
             rule
+            arguments
             proxy
           }
         }
