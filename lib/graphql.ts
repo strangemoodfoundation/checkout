@@ -38,9 +38,9 @@ export interface PrecryptNodeMetadata {
   arguments: string[];
 }
 
-export interface PlatformNodeMetadata {
+export interface ChannelNodeMetadata {
   precrypts: PrecryptNodeMetadata[];
-  type: string;
+  name: string;
 }
 
 export interface FileNodeMetadata {
@@ -60,11 +60,11 @@ export interface ListingMetadata {
   links: SocialLinkNodeMetadata[];
   tags: string[];
   videos: VideoNodeMetadata[];
-  platforms: PlatformNodeMetadata[];
+  channels: ChannelNodeMetadata[];
 }
 
 const LISTING_METADATA_SCHEMA =
-  "bafkreiczgupdf5ha7jt5oqn77koptvclt7edfzriu34ozgeqnasmhyio6a";
+  "bafkreibopwmdififexwuea3kjqmvcgiokvfbbrc3jz6iutwqhl6gynsq3u";
 
 export async function getListingMetadata(
   uri: string
@@ -91,11 +91,21 @@ export async function getListingMetadata(
             url
             type
           }
+          primaryImage {
+            height
+            width
+            alt
+            src {
+              contentType
+              uri
+            }
+          }
         }
         createdAt
         updatedAt
         links {
           type
+          uri
         }
         images {
           height
@@ -114,8 +124,8 @@ export async function getListingMetadata(
             contentType
           }
         }
-        platforms {
-          type
+        channels {
+          name
           precrypts {
             key {
               uri

@@ -215,11 +215,11 @@ function DownloadButton({ metadata }: { metadata: ListingMetadata }) {
   const [statusID, setStatusID] = useState<string>();
 
   async function onDownload(item: ListingMetadata) {
-    const platform = item.platforms[0];
-    if (!platform) return;
+    const channel = item.channels[0];
+    if (!channel) return;
     if (!signMessage || !publicKey) return;
 
-    const precrypt = platform.precrypts[0];
+    const precrypt = channel.precrypts[0];
     if (!precrypt) return;
 
     const message = new TextEncoder().encode("precrypt");
@@ -260,11 +260,11 @@ function LibraryPage() {
   const router = useRouter();
 
   async function onDownload(item: ListingMetadata) {
-    const platform = item.platforms[0];
-    if (!platform) return;
+    const channel = item.channels[0];
+    if (!channel) return;
     if (!signMessage || !publicKey) return;
 
-    const precrypt = platform.precrypts[0];
+    const precrypt = channel.precrypts[0];
     if (!precrypt) return;
 
     const message = new TextEncoder().encode("precrypt");
