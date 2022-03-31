@@ -53,10 +53,7 @@ export default function Checkout(props: {
     if (!props.listing || !props.listing.metadata) return [];
     return (props.listing.metadata.videos || [])
       .concat(props.listing.metadata.images || []);
-  }, [
-    props.listing?.metadata?.videos,
-    props.listing?.metadata?.images
-  ]) as (VideoNodeMetadata | ImageNodeMetadata)[];
+  }, [ JSON.stringify(props.listing || {}) ]) as (VideoNodeMetadata | ImageNodeMetadata)[];
 
   if (!props.listing) {
     return (
@@ -126,6 +123,7 @@ export default function Checkout(props: {
               <Image
                 src={props.listing.metadata!.primaryImage?.src.uri}
                 className="w-full m-auto object-contain"
+                alt={props.listing.metadata!.primaryImage?.alt}
               />
             </div>
             <h1 className="text-3xl font-medium">
@@ -183,7 +181,7 @@ export default function Checkout(props: {
                 <div className="h-px flex-1 dark:bg-white opacity-10 mx-4" />
                 <div className="flex flex-row">
                   {props.listing.metadata!.tags.map(tag => (
-                    <div className="dark:bg-gray-700 bg-gray-200 px-1.5 py-0.5 ml-1 rounded">
+                    <div key={tag} className="dark:bg-gray-700 bg-gray-200 px-1.5 py-0.5 ml-1 rounded">
                       <p className="text-sm opacity-80">{tag}</p>
                     </div>
                   ))}
@@ -286,7 +284,7 @@ export default function Checkout(props: {
 
         {/* About the Developer(s) */}
         {props.listing.metadata!.creators?.map(creator => (
-          <div className="relative dark:bg-gray-800 bg-gray-100 flex flex-col p-4 my-2 rounded-sm">
+          <div key={JSON.stringify(creator)} className="relative dark:bg-gray-800 bg-gray-100 flex flex-col p-4 my-2 rounded-sm">
             <div className="flex flex-row justify-between mb-1">
               <div className="flex flex-row items-center">
                 {creator.primaryImage && (
