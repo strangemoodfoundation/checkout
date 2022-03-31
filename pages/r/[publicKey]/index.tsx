@@ -13,7 +13,6 @@ import {
 } from "@solana/wallet-adapter-react-ui";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useMemo, useState } from "react";
-import Image from 'next/image';
 import { VideoNodeMetadata, ImageNodeMetadata } from "../../../lib/graphql";
 import { grabStrangemood } from "../../../components/useStrangemood";
 import { getReadableDate } from "../../../utils";
@@ -102,9 +101,9 @@ export default function Checkout(props: {
   const renderChannelIcon = (channel: string) => {
     switch (channel) {
       case "apple":
-        return <AppleSVG className="w-5 h-5 opacity-80 mx-2 top-2 relative" />;
+        return <AppleSVG key={channel} className="w-5 h-5 opacity-80 mx-2 top-2 relative" />;
       case "windows":
-        return <WindowsSVG className="w-5 h-5 opacity-80 mx-2 top-2 relative" />;
+        return <WindowsSVG key={channel} className="w-5 h-5 opacity-80 mx-2 top-2 relative" />;
       default:
         return null;
     }
@@ -120,7 +119,7 @@ export default function Checkout(props: {
           {/* Game Summary */}
           <div className="flex flex-col dark:bg-gray-800 bg-gray-100 p-4 flex-auto md:flex-1 min-w-min md:w-64">
             <div className="flex flex-row dark:bg-black bg-gray-100 w-full md:w-auto mb-2">
-              <Image
+              <img
                 src={props.listing.metadata!.primaryImage?.src.uri}
                 className="w-full m-auto object-contain"
                 alt={props.listing.metadata!.primaryImage?.alt}
@@ -202,7 +201,7 @@ export default function Checkout(props: {
                       controlsList="nodownload"
                     />
                   ) : (
-                    <Image
+                    <img
                       src={activeCarouselItem.src.uri}
                       className="w-full h-full object-contain"
                       alt={(activeCarouselItem as ImageNodeMetadata).alt}
@@ -232,7 +231,7 @@ export default function Checkout(props: {
                           controlsList="nodownload"
                         />
                       ) : (
-                        <Image
+                        <img
                           src={item.src.uri}
                           className="w-full h-full object-cover pointer-events-none"
                           alt={(activeCarouselItem as ImageNodeMetadata).alt}
@@ -289,10 +288,10 @@ export default function Checkout(props: {
               <div className="flex flex-row items-center">
                 {creator.primaryImage && (
                   <div className="mr-4 mb-2 flex flex-col">
-                    <Image
+                    <img
                       src={creator.primaryImage.src.uri}
-                      alt={creator.primaryImage.alt}
                       className="w-14 h-14 object-contain rounded"
+                      alt={creator.primaryImage.alt}
                     />
                   </div>
                 )}
