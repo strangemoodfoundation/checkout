@@ -13,6 +13,7 @@ import {
 } from "@solana/wallet-adapter-react-ui";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useMemo, useState } from "react";
+import Image from 'next/image';
 import { VideoNodeMetadata, ImageNodeMetadata } from "../../../lib/graphql";
 import { grabStrangemood } from "../../../components/useStrangemood";
 import { getReadableDate } from "../../../utils";
@@ -122,7 +123,7 @@ export default function Checkout(props: {
           {/* Game Summary */}
           <div className="flex flex-col dark:bg-gray-800 bg-gray-100 p-4 flex-auto md:flex-1 min-w-min md:w-64">
             <div className="flex flex-row dark:bg-black bg-gray-100 w-full md:w-auto mb-2">
-              <img
+              <Image
                 src={props.listing.metadata!.primaryImage?.src.uri}
                 className="w-full m-auto object-contain"
               />
@@ -134,8 +135,10 @@ export default function Checkout(props: {
               <div className="flex flex-row items-center mt-1">
                 {props.listing.metadata!.links?.map(link => (
                   <a
+                    // @ts-ignore
                     key={link.uri}
                     className="opacity-50 underline text-xs break-all mx-1"
+                    // @ts-ignore
                     href={link.uri}
                   >
                     {link.type}
@@ -201,10 +204,10 @@ export default function Checkout(props: {
                       controlsList="nodownload"
                     />
                   ) : (
-                    <img
+                    <Image
                       src={activeCarouselItem.src.uri}
                       className="w-full h-full object-contain"
-                      alt={activeCarouselItem.alt}
+                      alt={(activeCarouselItem as ImageNodeMetadata).alt}
                     />
                   )}
               </div>
@@ -231,10 +234,10 @@ export default function Checkout(props: {
                           controlsList="nodownload"
                         />
                       ) : (
-                        <img
+                        <Image
                           src={item.src.uri}
                           className="w-full h-full object-cover pointer-events-none"
-                          alt={item.alt}
+                          alt={(activeCarouselItem as ImageNodeMetadata).alt}
                         />
                       )}
                     </div>
@@ -288,7 +291,7 @@ export default function Checkout(props: {
               <div className="flex flex-row items-center">
                 {creator.primaryImage && (
                   <div className="mr-4 mb-2 flex flex-col">
-                    <img
+                    <Image
                       src={creator.primaryImage.src.uri}
                       alt={creator.primaryImage.alt}
                       className="w-14 h-14 object-contain rounded"
