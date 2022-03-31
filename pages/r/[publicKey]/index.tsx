@@ -15,7 +15,7 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useMemo, useState } from "react";
 import { VideoNodeMetadata, ImageNodeMetadata } from "../../../lib/graphql";
 import { grabStrangemood } from "../../../components/useStrangemood";
-import { getReadableDate } from "../../../utils";
+import { getLocaleDateString, getDateFromUnixEpoch } from "../../../utils";
 import { purchase } from "@strangemood/strangemood";
 import { PublicKey, Transaction } from "@solana/web3.js";
 import cn from "classnames";
@@ -164,7 +164,7 @@ export default function Checkout(props: {
                 </p>
                 <div className="h-px flex-1 bg-black dark:bg-white opacity-10 mx-4" />
                 <p className="text-sm opacity-80">
-                  {getReadableDate(new Date(props.listing.metadata!.createdAt), {
+                  {getLocaleDateString(new Date(getDateFromUnixEpoch(props.listing.metadata!.createdAt)), {
                     year: "numeric",
                     month: "long",
                     day: "numeric",

@@ -14,7 +14,11 @@ interface DateTimeFormatOptions {
   timeZone?: string;
 }
 
-export const getReadableDate = (date: Date, options?: DateTimeFormatOptions) => {
+export const getDateFromUnixEpoch = (unixEpoch: number): Date => {
+  return new Date(new Date(0).setUTCSeconds(unixEpoch));
+};
+
+export const getLocaleDateString = (date: Date, options?: DateTimeFormatOptions) => {
   // TODO: Support internationalization (different locales)
   return new Date(date).toLocaleDateString('en-US', options);
-}
+};
