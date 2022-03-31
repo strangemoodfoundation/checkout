@@ -151,7 +151,7 @@ export default function Checkout(props: {
                 <p className="text-sm opacity-50 uppercase">
                   Developer{props.listing.metadata!.creators.length > 1 ? 's' : ''}
                 </p>
-                <div className="h-px flex-1 dark:bg-white opacity-10 mx-4" />
+                <div className="h-px flex-1 bg-black dark:bg-white opacity-10 mx-4" />
                 <p className="text-sm opacity-80">
                   {props.listing.metadata!.creators.map(creator => creator.name).join(', ')}
                 </p>
@@ -162,7 +162,7 @@ export default function Checkout(props: {
                 <p className="text-sm opacity-50 uppercase">
                   Released
                 </p>
-                <div className="h-px flex-1 dark:bg-white opacity-10 mx-4" />
+                <div className="h-px flex-1 bg-black dark:bg-white opacity-10 mx-4" />
                 <p className="text-sm opacity-80">
                   {getReadableDate(new Date(props.listing.metadata!.createdAt), {
                     year: "numeric",
@@ -177,7 +177,7 @@ export default function Checkout(props: {
                 <p className="text-sm opacity-50 uppercase">
                   Tags
                 </p>
-                <div className="h-px flex-1 dark:bg-white opacity-10 mx-4" />
+                <div className="h-px flex-1 bg-black dark:bg-white opacity-10 mx-4" />
                 <div className="flex flex-row">
                   {props.listing.metadata!.tags.map(tag => (
                     <div key={tag} className="dark:bg-gray-700 bg-gray-200 px-1.5 py-0.5 ml-1 rounded">
